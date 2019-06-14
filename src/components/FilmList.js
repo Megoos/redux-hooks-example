@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react';
-import { useSelector, useDispatch, shallowEqual } from 'react-redux';
+import { useSelector, shallowEqual } from 'react-redux';
+import { useActions } from '../hooks/useActions';
 
 function addFilmAction(title) {
   return { type: 'ADD_FILM', payload: title };
@@ -7,9 +8,8 @@ function addFilmAction(title) {
 
 export default function FilmList() {
   const films = useSelector(state => state.data, shallowEqual);
-  const dispatch = useDispatch();
-
-  const addFilm = useCallback(() => dispatch(addFilmAction('Apollo 11')), [dispatch]);
+  const [addFilmActionDispatch] = useActions([addFilmAction]);
+  const addFilm = useCallback(() => addFilmActionDispatch('Apollo 11'), [addFilmActionDispatch]);
 
   return (
     <>
