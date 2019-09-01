@@ -1,26 +1,34 @@
-import React, { useCallback } from 'react';
-import { useSelector, shallowEqual } from 'react-redux';
-import { useActions } from '../hooks/useActions';
-
-function addFilmAction(title) {
-  return { type: 'ADD_FILM', payload: title };
-}
+import React, { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { addFilmAction } from '../redux/actions/filmsActions';
 
 export default function FilmList() {
-  const films = useSelector(state => state.data, shallowEqual);
-  const [addFilmActionDispatch] = useActions([addFilmAction]);
-  const addFilm = useCallback(() => addFilmActionDispatch('Apollo 11'), [addFilmActionDispatch]);
+  const [newFilm, setNewFilm] = useState('');
+
+  const films = useSelector(state => state.data);
+  const dispatch = useDispatch();
+
+  function handleAddFilm(event) {
+    event.preventDefault();
+
+    setTimeout(() => {
+      dispatch(addFilmAction(newFilm));
+      setNewFilm('');
+    }, 2000);
+  }
 
   return (
-    <>
-      <ul>
+    <div data-testid="container">
+      <ul data-testid="list">
         {films.map(film => (
           <li key={film}>{film}</li>
         ))}
       </ul>
-      <AddFilmButton onAddFilm={addFilm} />
-    </>
+
+      <form data-testid="form" onSubmit={handleAddFilm}>
+        <input data-testid="film-input" value={newFilm} onChange={event => setNewFilm(event.target.value)} />
+        <button type="submit">Add film</button>
+      </form>
+    </div>
   );
 }
-
-const AddFilmButton = React.memo(({ onAddFilm }) => <button onClick={onAddFilm}>{'Add film "Apollo 11"'}</button>);

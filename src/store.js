@@ -1,18 +1,6 @@
 import { createStore } from 'redux';
+import { filmsReducer } from './redux/reducers/filmsReducers';
 
-const INITIAL_STATE = {
-  data: ['Plus One', 'John Wick', 'Transit']
-};
-
-function films(state = INITIAL_STATE, action) {
-  switch (action.type) {
-    case 'ADD_FILM':
-      return { ...state, data: [...state.data, action.payload] };
-    default:
-      return state;
-  }
-}
-
-const store = createStore(films);
+const store = createStore(filmsReducer);
 
 export default store;
